@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import androidx.core.app.ActivityCompat
 
 import android.content.pm.PackageManager
-
-
+import org.json.JSONObject
 
 
 class LoginActivity : LocalizeActivity() {
@@ -77,7 +76,14 @@ class LoginActivity : LocalizeActivity() {
             val call = APIClient.getClient().register(email, mobile)
             APIClient.response(call, this, false, object : RetrofitResponse {
                 override fun onResponse(response: String?) {
-                    RegisterActivity.open(currActivity)
+                    if(response !=null){
+                        val js = JSONObject(response)
+                        if(js.getInt("status")==1){
+                            RegisterActivity.open(currActivity)
+                        }else
+                           Toast.makeText(currActivity,js["message"].toString(),Toast.LENGTH_LONG).show()
+                    }
+
                 }
 
 

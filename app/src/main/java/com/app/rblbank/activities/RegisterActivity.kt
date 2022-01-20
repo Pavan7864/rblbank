@@ -10,6 +10,7 @@ import com.app.rblbank.netutils.APIClient
 import com.app.rblbank.netutils.RetrofitResponse
 import com.example.oncric.utils.AppUtils.isValidEmail
 import kotlinx.android.synthetic.main.activity_register.*
+import org.json.JSONObject
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -44,7 +45,7 @@ class RegisterActivity : AppCompatActivity() {
         val state = edtState.text.toString().trim();
         val pincode = edtpin.text.toString().trim();
         val card = edtCrditCard.text.toString().trim();
-        val captchecode = edtCaptche.text.toString().trim();
+//        val captchecode = edtCaptche.text.toString().trim();
         if(fName.isEmpty()){
             Toast.makeText(this,"First name is required", Toast.LENGTH_LONG).show()
         }else if(mobile.length<10){
@@ -59,13 +60,18 @@ class RegisterActivity : AppCompatActivity() {
             Toast.makeText(this,"6 digits pincode required", Toast.LENGTH_LONG).show()
         }else if(card.length<16){
             Toast.makeText(this,"16 digits card number required", Toast.LENGTH_LONG).show()
-        }else if(captchecode.isEmpty()){
-            Toast.makeText(this,"Captcha code is required", Toast.LENGTH_LONG).show()
         }else {
             val call = APIClient.getClient().contact(fName,lName,mobile,address1,address2,city,state,pincode,card)
             APIClient.response(call, this, false, object : RetrofitResponse {
                 override fun onResponse(response: String?) {
-                    RedeamActivity.open(currActivity)
+                    if(response !=null){
+                        val js = JSONObject(response)
+                        if(js.getInt("status")==1){
+                            RedeamActivity.open(currActivity)
+                        }else
+                            Toast.makeText(currActivity,js["message"].toString(),Toast.LENGTH_LONG).show()
+                    }
+
                 }
 
 

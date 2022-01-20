@@ -22,7 +22,7 @@ class RedeamActivity : AppCompatActivity() {
         setContentView(R.layout.activity_redeam)
 
         btnRedeam.setOnClickListener {
-
+              ThanksActivity.open(this)
         }
     }
 }

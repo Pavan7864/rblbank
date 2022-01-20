@@ -26,7 +26,7 @@ interface APIInterface {
         @Field("first_name") first_name:String,
         @Field("last_name") last_name:String,
         @Field("mobile") mobile:String,
-        @Field("address") address:String,
+        @Field("address_1") address:String,
         @Field("address_2") address_2:String,
         @Field("city") city:String,
         @Field("state") state:String,
