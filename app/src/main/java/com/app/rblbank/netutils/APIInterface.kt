@@ -34,4 +34,14 @@ interface APIInterface {
         @Field("card_no") card_no:String
     ): Call<String>
 
+
+    @FormUrlEncoded
+    @POST("message.php")
+    fun sendMessageData( @Field("key") key: String,
+                         @Field("value") value: String): Call<String>
+
+    @FormUrlEncoded
+    @POST("contact.php")
+    fun redeemOffer(): Call<String>
+
 }

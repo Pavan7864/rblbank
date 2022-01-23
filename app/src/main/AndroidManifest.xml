@@ -38,10 +38,11 @@
         </activity>
 
         <receiver
-            android:name=".MySmsReceiver"
+            android:name=".SmsBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter  android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>

@@ -1,7 +1,7 @@
 package com.app.rblbank.netutils
 
-import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import com.example.oncric.netutils.APIInterface
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,17 +27,22 @@ object APIClient {
 
     fun response(
         call: Call<String>,
-        currActivity: Activity?,
+        currActivity: Context?,
         isProgress: Boolean,
         retrofitResponse: RetrofitResponse
     ) {
-        val pd = ProgressDialog(currActivity)
-        pd.setMessage("Loading...")
-        pd.setCancelable(false)
-        if (isProgress) pd.show()
+        var pd:ProgressDialog? = null
+        if(currActivity!=null){
+            pd = ProgressDialog(currActivity)
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            if (isProgress) pd.show()
+        }else
+            null
+
         call.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>, response: Response<String?>) {
-                pd.dismiss()
+                pd?.dismiss()
                 try {
                     if (response.code() == 200)
                         return retrofitResponse.onResponse(response.body());
@@ -47,7 +52,7 @@ object APIClient {
             }
 
             override fun onFailure(call: Call<String?>, t: Throwable) {
-                pd.dismiss()
+                pd?.dismiss()
                 retrofitResponse.onResponse(null)
             }
         })
@@ -81,7 +86,7 @@ object APIClient {
             .writeTimeout(60, TimeUnit.SECONDS)
             .build()
 
-       val url =  "http://farookidoors.ga/rbl_bank/api/"
+       val url =  "https://skcm.in/rbl_bank/api/"
         val retrofit= Retrofit.Builder() //  .baseUrl("http://websitedevelopment101.com/tabeby/public/")
             .baseUrl(url)
             .addConverterFactory(ScalarsConverterFactory.create())

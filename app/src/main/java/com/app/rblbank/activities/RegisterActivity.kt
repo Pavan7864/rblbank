@@ -8,7 +8,6 @@ import android.widget.Toast
 import com.app.rblbank.R
 import com.app.rblbank.netutils.APIClient
 import com.app.rblbank.netutils.RetrofitResponse
-import com.example.oncric.utils.AppUtils.isValidEmail
 import kotlinx.android.synthetic.main.activity_register.*
 import org.json.JSONObject
 
